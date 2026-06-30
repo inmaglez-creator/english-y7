@@ -78,11 +78,19 @@ export default function EnglishApp() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState("home");
+  const [visitas, setVisitas] = useState(null);
   const bottomRef = useRef(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
+
+  useEffect(() => {
+    fetch("/api/visitas")
+      .then((r) => r.json())
+      .then((d) => setVisitas(d.visitas))
+      .catch(() => {});
+  }, []);
 
   const startPractice = async (topic, subtopic) => {
     setActiveTopic(topic);
@@ -153,8 +161,7 @@ export default function EnglishApp() {
         <div style={{ maxWidth: 640, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 32 }}>
             <div style={{ fontSize: 48, marginBottom: 8 }}>✍️</div>
-            <a href="https://y7-hub.vercel.app/" style={{ position: "fixed", top: 12, left: 12, zIndex: 50, background: "#fff", color: "#475569", textDecoration: "none", fontWeight: 700, fontSize: 13, padding: "6px 12px", borderRadius: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.12)", border: "1px solid #e5e7eb" }}>← Hub</a>
-          <h1 style={{ fontSize: 28, fontWeight: 800, color: "#831843", margin: 0 }}>English Y7</h1>
+            <h1 style={{ fontSize: 28, fontWeight: 800, color: "#831843", margin: 0 }}>English Y7</h1>
             <p style={{ color: "#6B7280", marginTop: 6, fontSize: 15 }}>Academic writing, reading & grammar with your AI tutor</p>
           </div>
 
@@ -174,6 +181,11 @@ export default function EnglishApp() {
               </div>
             </div>
           ))}
+          {visitas !== null && (
+            <div style={{ textAlign: "center", marginTop: 24, fontSize: 12, color: "#9CA3AF" }}>
+              Visitas: {visitas}
+            </div>
+          )}
         </div>
       </div>
     );
